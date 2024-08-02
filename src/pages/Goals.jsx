@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import { Button } from 'react-bootstrap'
+import { Button, Modal, Form } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
 import add from "../assets/add.png";
 import del from "../assets/delete.png";
 import done from "../assets/done.png";
 import GoalCard from "../components/GoalCard";
-import './pages.css'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import './pages.css';
 
 const Goals = () => {
-  const [goal, setGoal] = useState([
+  const [showModal, setShowModal] = useState(false);
+  const [goalTitle, setGoalTitle] = useState("");
+  const [goalDescription, setGoalDescription] = useState(""); // New state for description
+  const [goalDeadline, setGoalDeadline] = useState(new Date());
+  const [goals, setGoals] = useState([
     {
       id: 1,
       title: "Fix Figma Issue",
@@ -39,11 +46,31 @@ const Goals = () => {
       deadline: "8/15/2024 3:00 PM",
     },
   ]);
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
+  const handleSaveGoal = () => {
+    const newGoal = {
+      id: goals.length + 1,
+      title: goalTitle,
+      description: goalDescription,
+      createdAt: format(new Date(), "M/d/yyyy h:mm a"),
+      deadline: format(goalDeadline, "M/d/yyyy h:mm a"),
+    };
+    setGoals([...goals, newGoal]);
+    setGoalTitle("");
+    setGoalDescription(""); // Clear description
+    setGoalDeadline(new Date());
+    handleClose();
+  };
+
   return (
     <div className="h-80">
       <div className="btn-container">
         <Button
           className="btn custom-btn orngebtn btn-sm rounded-pill"
+          onClick={handleShow}
         >
           <img className="img" src={add} alt="Add Goal" />
           Add Goal
@@ -58,12 +85,82 @@ const Goals = () => {
         </Button>
       </div>
       <div>
-        {goal.map((goal) => (
+        {goals.map((goal) => (
           <GoalCard key={goal.id} goal={goal} />
         ))}
       </div>
+      {/* Add Goal Modal */}
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        centered
+        className="custom-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Goal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: "#F8FFFE" }}>
+          <Form>
+            <Form.Group controlId="goalTitle" className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter goal title"
+                value={goalTitle}
+                onChange={(e) => setGoalTitle(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="goalDescription" className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter goal description"
+                value={goalDescription}
+                onChange={(e) => setGoalDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="goalDeadline" className="mb-3">
+              <Form.Label>Deadline</Form.Label>
+              <DatePicker
+                selected={goalDeadline}
+                onChange={(date) => setGoalDeadline(date)}
+                showTimeSelect
+                dateFormat="Pp"
+                className="form-control"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button
+            variant="outline-light"
+            size="sm"
+            onClick={handleClose}
+            style={{
+              borderColor: "#5E1B89",
+              color: "#5E1B89",
+              marginRight: "10px",
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            style={{
+              backgroundColor: "#5E1B89",
+              borderColor: "#5E1B89",
+              color: "white",
+            }}
+            onClick={handleSaveGoal}
+          >
+            Save Goal
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Goals
+export default Goals;

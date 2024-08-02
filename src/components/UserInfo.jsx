@@ -32,7 +32,7 @@ const UserInfo = () => {
 
   return (
     <div className="container-fluid user-container">
-        <h1 className='fs-1 title'>QuickTo-Do</h1>
+        <h1 className='fs-1 title taskname'>QuickTo-Do</h1>
         <div className="info">
           <div className="info-text">
             <h3 className='info-message fw-bolder'>John Mark Peroche</h3>
