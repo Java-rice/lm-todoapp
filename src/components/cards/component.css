@@ -161,3 +161,38 @@
     width: 15px;
     height: 15px;
 }
+
+.task-card.done {
+    text-decoration: line-through;
+    background-color: #e0e0e0;
+}
+  
+.card-btn {
+    background: none;
+    border: none;
+    index: 1;
+    padding: 0;
+}
+  
+.card-btn img {
+    width: 20px;
+    height: 20px;
+}
+  
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #5E1B89;
+}
+  
+.my-4 {
+    margin: 1.5rem 0;
+}
+  
+.card-subtitle {
+    margin-bottom: 0.5rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+  
+.card-text {
+    margin-bottom: 1rem;
+}
+  
