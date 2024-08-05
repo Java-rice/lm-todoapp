@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import add from "../assets/add.png";
 import del from "../assets/delete.png";
 import done from "../assets/done.png";
-import TaskCard from "../components/TaskCard";
+import TaskCard from "../components/cards/TaskCard";
 import { Button, Modal, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,52 +13,23 @@ import "./pages.css";
 const Task = () => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
-  const [taskDescription, setTaskDescription] = useState(""); // New state for description
+  const [taskDescription, setTaskDescription] = useState("");
   const [taskDeadline, setTaskDeadline] = useState(new Date());
-  const [isLongTerm, setIsLongTerm] = useState(false);
-  const [longTermGoal, setLongTermGoal] = useState("");
+  const [goal, setGoal] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [goals, setGoals] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    setTasks(storedTasks);
+    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
+    setGoals(storedGoals);
+  }, []);
+
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Fix Figma Issue",
-      description: "Resolve the issue with the Figma design files.",
-      createdAt: "7/31/2024 7:55 AM",
-      deadline: "8/26/2024 8:00 PM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-    {
-      id: 2,
-      title: "Complete React Project",
-      description:
-        "Finish building the React project with all required features.",
-      createdAt: "7/15/2024 9:00 AM",
-      deadline: "8/30/2024 5:00 PM",
-      isLongTerm: true,
-      longTermGoal: "Build a fully functional app",
-    },
-    {
-      id: 3,
-      title: "Prepare for Exam",
-      description: "Study for the upcoming exams in September.",
-      createdAt: "7/20/2024 11:30 AM",
-      deadline: "9/10/2024 10:00 AM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-    {
-      id: 4,
-      title: "Update Resume",
-      description: "Update the resume with the latest projects and skills.",
-      createdAt: "7/25/2024 2:45 PM",
-      deadline: "8/15/2024 3:00 PM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-  ]);
 
   const handleSaveTask = () => {
     const newTask = {
@@ -67,16 +38,44 @@ const Task = () => {
       description: taskDescription,
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(taskDeadline, "M/d/yyyy h:mm a"),
-      isLongTerm: isLongTerm,
-      longTermGoal: longTermGoal,
+      goal: goal,
+      done: false,
     };
-    setTasks([...tasks, newTask]);
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     setTaskTitle("");
-    setTaskDescription(""); // Clear description
+    setTaskDescription("");
     setTaskDeadline(new Date());
-    setIsLongTerm(false);
-    setLongTermGoal("");
+    setGoal("");
     handleClose();
+  };
+
+  const handleMarkAllDone = () => {
+    const updatedTasks = tasks.map((task) => ({ ...task, done: true }));
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+  };
+
+  const handleClearAll = () => {
+    setTasks([]);
+    localStorage.removeItem("tasks");
+  };
+
+  const handleConfirm = (action) => {
+    setConfirmAction(action);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirm(false);
+    setConfirmAction(null);
+  };
+
+  const handleConfirmProceed = () => {
+    if (confirmAction === "markAllDone") handleMarkAllDone();
+    if (confirmAction === "clearAll") handleClearAll();
+    handleConfirmClose();
   };
 
   return (
@@ -89,25 +88,37 @@ const Task = () => {
           <img className="img" src={add} alt="Add Task" />
           Add Task
         </Button>
-        <Button className="btn custom-btn orngebtn btn-sm rounded-pill">
+        <Button
+          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          onClick={() => handleConfirm("markAllDone")}
+        >
           <img className="img" src={del} alt="Mark All Done" />
           Mark All Done
         </Button>
-        <Button className="btn custom-btn vltbtn btn-sm rounded-pill">
+        <Button
+          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          onClick={() => handleConfirm("clearAll")}
+        >
           <img className="img" src={done} alt="Clear All" />
           Clear All
         </Button>
       </div>
       <div>
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard
+            key={task.id}
+            task={task}
+            tasks={tasks}
+            setTasks={setTasks}
+            goals={goals}
+          />
         ))}
       </div>
       {/* Add Task Modal */}
       <Modal
         show={showModal}
         onHide={handleClose}
-        centered // Center the modal vertically
+        centered
         className="custom-modal"
       >
         <Modal.Header closeButton>
@@ -144,33 +155,21 @@ const Task = () => {
                 className="form-control"
               />
             </Form.Group>
-            <Form.Group controlId="isLongTerm" className="mb-3">
-              <Form.Check
-                type="checkbox"
-                label="Is this a long-term goal?"
-                checked={isLongTerm}
-                onChange={(e) => setIsLongTerm(e.target.checked)}
-              />
-            </Form.Group>
-            {isLongTerm && (
-              <Form.Group controlId="longTermGoal" className="mb-3">
-                <Form.Label>Long-Term Goal</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={longTermGoal}
-                  onChange={(e) => setLongTermGoal(e.target.value)}
-                >
-                  <option value="">Select a goal</option>
-                  <option value="Career Development">Career Development</option>
-                  <option value="Health and Fitness">Health and Fitness</option>
-                  <option value="Personal Growth">Personal Growth</option>
-                  <option value="Financial Stability">
-                    Financial Stability
+            <Form.Group controlId="goal" className="mb-3">
+              <Form.Label>Goal</Form.Label>
+              <Form.Control
+                as="select"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+              >
+                <option value="">Select a goal</option>
+                {goals.map((g) => (
+                  <option key={g.id} value={g.title}>
+                    {g.title}
                   </option>
-                  <option value="Other">Other</option>
-                </Form.Control>
-              </Form.Group>
-            )}
+                ))}
+              </Form.Control>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
@@ -194,9 +193,26 @@ const Task = () => {
               borderColor: "#5E1B89",
               color: "white",
             }}
-            onClick={handleSaveTask} // Save the task
+            onClick={handleSaveTask}
           >
             Save Task
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Confirmation Modal */}
+      <Modal show={showConfirm} onHide={handleConfirmClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Action</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to {confirmAction === "markAllDone" ? "mark all tasks as done" : "clear all tasks"}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleConfirmClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmProceed}>
+            Proceed
           </Button>
         </Modal.Footer>
       </Modal>

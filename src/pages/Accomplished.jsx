@@ -1,55 +1,41 @@
-import React, { useState } from "react";
-import { Button } from 'react-bootstrap'
+import React, { useState, useEffect } from "react";
+import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import done from "../assets/done.png";
-import AccomplishedCard from '../components/AccomplishedCard';
-import './pages.css'
+import AccomplishedCard from "../components/cards/AccomplishedCard";
+import "./pages.css";
 
 const Accomplished = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Fix Figma Issue",
-      description: "Resolve the issue with the Figma design files.",
-      createdAt: "7/31/2024 7:55 AM",
-      deadline: "8/26/2024 8:00 PM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-    {
-      id: 2,
-      title: "Complete React Project",
-      description:
-        "Finish building the React project with all required features.",
-      createdAt: "7/15/2024 9:00 AM",
-      deadline: "8/30/2024 5:00 PM",
-      isLongTerm: true,
-      longTermGoal: "Build a fully functional app",
-    },
-    {
-      id: 3,
-      title: "Prepare for Exam",
-      description: "Study for the upcoming exams in September.",
-      createdAt: "7/20/2024 11:30 AM",
-      deadline: "9/10/2024 10:00 AM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-    {
-      id: 4,
-      title: "Update Resume",
-      description: "Update the resume with the latest projects and skills.",
-      createdAt: "7/25/2024 2:45 PM",
-      deadline: "8/15/2024 3:00 PM",
-      isLongTerm: false,
-      longTermGoal: "",
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
+    const accomplishedGoals = storedGoals.filter((goal) => goal.done);
+    setTasks(accomplishedGoals);
+  }, []);
+
+  const handleDeleteAll = () => {
+    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
+    const updatedGoals = storedGoals.filter((goal) => !goal.done);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    setTasks([]);
+  };
+
+  const handleConfirm = () => setShowConfirm(true);
+  const handleClose = () => setShowConfirm(false);
+  const handleConfirmProceed = () => {
+    handleDeleteAll();
+    handleClose();
+  };
 
   return (
     <div className="h-80">
       <div className="btn-container">
-        <Button className="btn custom-btn vltbtn btn-sm rounded-pill">
+        <Button
+          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          onClick={handleConfirm}
+        >
           <img className="img" src={done} alt="Delete All" />
           Delete All
         </Button>
@@ -59,8 +45,25 @@ const Accomplished = () => {
           <AccomplishedCard key={task.id} task={task} />
         ))}
       </div>
+      {/* Confirmation Modal */}
+      <Modal show={showConfirm} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Action</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete all accomplished goals?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmProceed}>
+            Proceed
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Accomplished
+export default Accomplished;

@@ -1,51 +1,29 @@
-import React, { useState } from "react";
-import { Button, Modal, Form } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import add from "../assets/add.png";
 import del from "../assets/delete.png";
 import done from "../assets/done.png";
-import GoalCard from "../components/GoalCard";
+import GoalCard from "../components/cards/GoalCard";
+import AccomplishedCard from "../components/cards/AccomplishedCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
-import './pages.css';
+import "./pages.css";
 
 const Goals = () => {
   const [showModal, setShowModal] = useState(false);
   const [goalTitle, setGoalTitle] = useState("");
-  const [goalDescription, setGoalDescription] = useState(""); // New state for description
+  const [goalDescription, setGoalDescription] = useState("");
   const [goalDeadline, setGoalDeadline] = useState(new Date());
-  const [goals, setGoals] = useState([
-    {
-      id: 1,
-      title: "Fix Figma Issue",
-      description: "Resolve the issue with the Figma design files.",
-      createdAt: "7/31/2024 7:55 AM",
-      deadline: "8/26/2024 8:00 PM",
-    },
-    {
-      id: 2,
-      title: "Complete React Project",
-      description:
-        "Finish building the React project with all required features.",
-      createdAt: "7/15/2024 9:00 AM",
-      deadline: "8/30/2024 5:00 PM",
-    },
-    {
-      id: 3,
-      title: "Prepare for Exam",
-      description: "Study for the upcoming exams in September.",
-      createdAt: "7/20/2024 11:30 AM",
-      deadline: "9/10/2024 10:00 AM",
-    },
-    {
-      id: 4,
-      title: "Update Resume",
-      description: "Update the resume with the latest projects and skills.",
-      createdAt: "7/25/2024 2:45 PM",
-      deadline: "8/15/2024 3:00 PM",
-    },
-  ]);
+  const [goals, setGoals] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+
+  useEffect(() => {
+    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
+    setGoals(storedGoals);
+  }, []);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -57,12 +35,64 @@ const Goals = () => {
       description: goalDescription,
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(goalDeadline, "M/d/yyyy h:mm a"),
+      done: false,
     };
-    setGoals([...goals, newGoal]);
+    const updatedGoals = [...goals, newGoal];
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
     setGoalTitle("");
-    setGoalDescription(""); // Clear description
+    setGoalDescription("");
     setGoalDeadline(new Date());
     handleClose();
+  };
+
+  const handleMarkAsDone = (id) => {
+    const updatedGoals = goals.map((goal) => 
+      goal.id === id ? { ...goal, done: !goal.done } : goal
+    );
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
+  const handleDeleteGoal = (id) => {
+    const updatedGoals = goals.filter((goal) => goal.id !== id);
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
+  const handleEditGoal = (updatedGoal) => {
+    const updatedGoals = goals.map((goal) =>
+      goal.id === updatedGoal.id ? updatedGoal : goal
+    );
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
+  const handleMarkAllDone = () => {
+    const updatedGoals = goals.map((goal) => ({ ...goal, done: true }));
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
+  const handleClearAll = () => {
+    setGoals([]);
+    localStorage.removeItem("goals");
+  };
+
+  const handleConfirm = (action) => {
+    setConfirmAction(action);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirm(false);
+    setConfirmAction(null);
+  };
+
+  const handleConfirmProceed = () => {
+    if (confirmAction === "markAllDone") handleMarkAllDone();
+    if (confirmAction === "clearAll") handleClearAll();
+    handleConfirmClose();
   };
 
   return (
@@ -75,19 +105,43 @@ const Goals = () => {
           <img className="img" src={add} alt="Add Goal" />
           Add Goal
         </Button>
-        <Button className="btn custom-btn orngebtn btn-sm rounded-pill">
-          <img className="img" src={del} alt="Mark All Done" />
+        <Button
+          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          onClick={() => handleConfirm("markAllDone")}
+        >
+          <img className="img" src={done} alt="Mark All Done" />
           Mark All Done
         </Button>
-        <Button className="btn custom-btn vltbtn btn-sm rounded-pill">
-          <img className="img" src={done} alt="Clear All" />
+        <Button
+          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          onClick={() => handleConfirm("clearAll")}
+        >
+          <img className="img" src={del} alt="Clear All" />
           Clear All
         </Button>
       </div>
       <div>
-        {goals.map((goal) => (
-          <GoalCard key={goal.id} goal={goal} />
-        ))}
+        {goals
+          .filter((goal) => !goal.done)
+          .map((goal) => (
+            <GoalCard
+              key={goal.id}
+              goal={goal}
+              markAsDone={handleMarkAsDone}
+              deleteGoal={handleDeleteGoal}
+              editGoal={handleEditGoal}
+            />
+          ))}
+      </div>
+      <div>
+        {goals
+          .filter((goal) => goal.done)
+          .map((goal) => (
+            <AccomplishedCard
+              key={goal.id}
+              task={goal}
+            />
+          ))}
       </div>
       {/* Add Goal Modal */}
       <Modal
@@ -156,6 +210,23 @@ const Goals = () => {
             onClick={handleSaveGoal}
           >
             Save Goal
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Confirmation Modal */}
+      <Modal show={showConfirm} onHide={handleConfirmClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Action</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to {confirmAction === "markAllDone" ? "mark all goals as done" : "clear all goals"}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleConfirmClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmProceed}>
+            Proceed
           </Button>
         </Modal.Footer>
       </Modal>
