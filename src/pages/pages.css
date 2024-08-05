@@ -10,8 +10,9 @@
 .btn-container {
     display: flex;
     flex-direction: row;
-    justify-content: end;
-    gap: 1%;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
 }
 
 .img {
@@ -22,6 +23,7 @@
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
+    width: 20%;
 }
 
 .btn.orngebtn {
@@ -36,3 +38,14 @@
     border: 0;
 }
 
+@media (max-width: 769px) {
+    .btn-container {
+        flex-direction: column;
+        justify-content: center;
+        gap: .5rem;
+    }
+    .btn.custom-btn {
+        width: 100%;
+    }
+
+}
