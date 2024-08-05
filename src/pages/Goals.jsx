@@ -5,7 +5,6 @@ import add from "../assets/add.png";
 import del from "../assets/delete.png";
 import done from "../assets/done.png";
 import GoalCard from "../components/cards/GoalCard";
-import AccomplishedCard from "../components/cards/AccomplishedCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
@@ -19,7 +18,6 @@ const Goals = () => {
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
-  const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
     const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
@@ -31,12 +29,13 @@ const Goals = () => {
 
   const handleSaveGoal = () => {
     const newGoal = {
-      id: goals.length ? goals[goals.length - 1].id + 1 : 1,
+      id: goals.length + 1,
       title: goalTitle,
       description: goalDescription,
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(goalDeadline, "M/d/yyyy h:mm a"),
       done: false,
+      origin: "goals",
     };
     const updatedGoals = [...goals, newGoal];
     setGoals(updatedGoals);
@@ -67,7 +66,6 @@ const Goals = () => {
     );
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
-    setEditingGoal(null);
   };
 
   const handleMarkAllDone = () => {
@@ -115,7 +113,7 @@ const Goals = () => {
           onClick={() => handleConfirm("markAllDone")}
         >
           <img className="img" src={done} alt="Mark All Done" />
-          Mark All Done
+          All Done
         </Button>
         <Button
           className="btn custom-btn btn-sm rounded"
@@ -126,30 +124,23 @@ const Goals = () => {
         </Button>
       </div>
       <div>
-        {goals
-          .filter((goal) => !goal.done)
-          .map((goal) => (
-            <GoalCard
-              key={goal.id}
-              goal={goal}
-              markAsDone={handleMarkAsDone}
-              deleteGoal={handleDeleteGoal}
-              editGoal={(updatedGoal) => handleEditGoal(updatedGoal)}
-              onEdit={() => setEditingGoal(goal)}
-            />
-          ))}
+        {goals.map((goal) => (
+          <GoalCard
+            key={goal.id}
+            goal={goal}
+            markAsDone={handleMarkAsDone}
+            deleteGoal={handleDeleteGoal}
+            editGoal={handleEditGoal}
+          />
+        ))}
       </div>
-      {/* Add Goal Modal */}
-      <Modal
-        show={showModal}
-        onHide={handleClose}
-        centered
-        className="custom-modal"
-      >
+
+      {/* Modal for Adding Goal */}
+      <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add New Goal</Modal.Title>
+          <Modal.Title>Add Goal</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ backgroundColor: "#F8FFFE" }}>
+        <Modal.Body>
           <Form>
             <Form.Group controlId="goalTitle" className="mb-3">
               <Form.Label>Title</Form.Label>
@@ -182,47 +173,35 @@ const Goals = () => {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button
-            variant="outline-light"
-            size="sm"
-            onClick={handleClose}
-            style={{
-              borderColor: "#5E1B89",
-              color: "#5E1B89",
-              marginRight: "10px",
-            }}
-          >
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            style={{
-              backgroundColor: "#5E1B89",
-              borderColor: "#5E1B89",
-              color: "white",
-            }}
-            onClick={handleSaveGoal}
-          >
+          <Button variant="primary" onClick={handleSaveGoal}>
             Save Goal
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Confirmation Modal */}
+
+      {/* Confirm Modal */}
       <Modal show={showConfirm} onHide={handleConfirmClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Action</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to {confirmAction === "markAllDone" ? "mark all goals as done" : "clear all goals"}?
+          {confirmAction === "markAllDone" && (
+            <p>Are you sure you want to mark all goals as done?</p>
+          )}
+          {confirmAction === "clearAll" && (
+            <p>Are you sure you want to clear all goals?</p>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleConfirmClose}>
-            Cancel
+            No
           </Button>
           <Button variant="primary" onClick={handleConfirmProceed}>
-            Proceed
+            Yes
           </Button>
         </Modal.Footer>
       </Modal>

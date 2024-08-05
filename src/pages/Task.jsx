@@ -42,6 +42,7 @@ const Task = () => {
       goal: goal,
       status: taskStatus,
       done: false,
+      origin: "tasks",
     };
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
@@ -82,7 +83,7 @@ const Task = () => {
   };
 
   return (
-    <div className="h-80">
+    <div className="h-80 card__bar">
       <div className="title-bar container-fluid">
         <h3 className="">To Do</h3>
       </div>
@@ -99,7 +100,7 @@ const Task = () => {
           onClick={() => handleConfirm("markAllDone")}
         >
           <img className="img" src={done} alt="Mark All Done" />
-          Mark All Done
+          All Done
         </Button>
         <Button
           className="btn custom-btn btn-sm rounded"
