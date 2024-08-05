@@ -35,20 +35,20 @@ const Header = () => {
           {isMobile && isMenuOpen && <User className="user-mobile" />}
           <ul className="nav__list">
             <li className="nav__item first-nav">
-              {isMobile && isMenuOpen && <img className="nav__icon" src={todo}/>}
-              <NavLink to="/" className="nav__link" onClick={handleMenuToggle}>
+              {isMobile && isMenuOpen && <img className="nav__icon" src={todo} />}
+              <NavLink to="/" className="nav__link" activeClassName="nav__link--active" onClick={handleMenuToggle}>
                 To Do
               </NavLink>
             </li>
             <li className="nav__item">
-              {isMobile && isMenuOpen && <img className="nav__icon" src={goals}/>}
-              <NavLink to="/goals" className="nav__link" onClick={handleMenuToggle}>
+              {isMobile && isMenuOpen && <img className="nav__icon" src={goals} />}
+              <NavLink to="/goals" className="nav__link" activeClassName="nav__link--active" onClick={handleMenuToggle}>
                 Long Term Goals
               </NavLink>
             </li>
             <li className="nav__item">
-              {isMobile && isMenuOpen && <img className="nav__icon" src={accomplished}/>}
-              <NavLink to="/accomplished" className="nav__link" onClick={handleMenuToggle}>
+              {isMobile && isMenuOpen && <img className="nav__icon" src={accomplished} />}
+              <NavLink to="/accomplished" className="nav__link" activeClassName="nav__link--active" onClick={handleMenuToggle}>
                 Accomplished
               </NavLink>
             </li>

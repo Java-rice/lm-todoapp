@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Form, Button, Modal } from 'react-bootstrap';
-import del from '../../assets/delete.png';
-import edit from '../../assets/edit.png';
+import done from '../../assets/cdone.png';
+import edit from '../../assets/cedit.png';
+import del from '../../assets/cdelete.png';
 import './component.css';
 
 const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
@@ -10,13 +11,15 @@ const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
   const [editTitle, setEditTitle] = useState(goal.title);
   const [editDescription, setEditDescription] = useState(goal.description);
   const [editDeadline, setEditDeadline] = useState(goal.deadline);
+  const [editStatus, setEditStatus] = useState(goal.done);
 
   const handleEditGoal = () => {
     const updatedGoal = {
       ...goal,
       title: editTitle,
       description: editDescription,
-      deadline: editDeadline
+      deadline: editDeadline,
+      done: editStatus
     };
     editGoal(updatedGoal);
     setShowEditModal(false);
@@ -27,42 +30,38 @@ const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
       <Card className="my-4" style={{ backgroundColor: '#FFA07A' }}>
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <Form.Check 
-              type="checkbox"
-              id={`goal-${goal.id}`}
-              label={
-                <span
-                  className="h5 font-weight-bold"
-                  style={{ textDecoration: goal.done ? "line-through" : "none" }}
-                >
-                  {goal.title}
-                </span>
-              }
-              checked={goal.done}
-              onChange={() => markAsDone(goal.id)}
-            />
+            <span
+              className={`h5 font-weight-bold ${goal.done ? 'text-decoration-line-through' : ''}`}
+            >
+              {goal.title}
+            </span>
+            <span className={`badge ${goal.done ? 'bg-success' : 'bg-secondary'}`}>
+              {goal.done ? 'Done' : 'Pending'}
+            </span>
           </div>
           {goal.description && (
             <h6
-              className="card-text mb-2"
-              style={{ textDecoration: goal.done ? "line-through" : "none" }}
+              className={`card-text mb-2 ${goal.done ? 'text-decoration-line-through' : ''}`}
             >
               {goal.description}
             </h6>
           )}
           <div className="container-fluid d-flex flex-row justify-content-between">
             <Card.Text>
-              <small className="text-muted">
+              <small className={`text-muted ${goal.done ? 'text-decoration-line-through' : ''}`}>
                 Created: {goal.createdAt}<br />
                 Deadline: {goal.deadline}
               </small>
             </Card.Text>
             <div className="d-flex justify-content-end">
-              <Button className="card-btn rounded me-2" onClick={() => deleteGoal(goal.id)}>
-                <img src={del} alt="Delete" />
+            <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(task.id)}>
+                <img src={done} alt="Done" />
               </Button>
               <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
                 <img src={edit} alt="Edit" />
+              </Button>
+              <Button className="card-btn rounded me-2" onClick={() => handleDeleteTask(task.id)}>
+                <img src={del} alt="Delete" />
               </Button>
             </div>
           </div>
@@ -102,6 +101,17 @@ const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
                 value={editDeadline}
                 onChange={(e) => setEditDeadline(e.target.value)}
               />
+            </Form.Group>
+            <Form.Group controlId="editStatus" className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Control
+                as="select"
+                value={editStatus}
+                onChange={(e) => setEditStatus(e.target.value === 'true')}
+              >
+                <option value="false">Pending</option>
+                <option value="true">Done</option>
+              </Form.Control>
             </Form.Group>
           </Form>
         </Modal.Body>

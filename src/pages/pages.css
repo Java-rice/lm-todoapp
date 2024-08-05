@@ -7,6 +7,28 @@
     box-shadow: 0px 5px 5px 0px #00000040;
 }
 
+.title-bar{
+    background: linear-gradient(90deg, #5E1B89 0%, #F4512C 100%);
+    width: 100%;
+    display: flex;
+    padding: 2px;
+    text-align: center;
+    podding: auto;
+    justify-content: center;
+    color: #F8FFFE;
+    margin-bottom: 2%;
+    box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.title-bar h3{
+    font-size: 1.4rem; 
+    text-align: center;
+    margin: auto;
+    font-weight: bold ;
+    font-family: Lato, serif;
+}
+
+
 .btn-container {
     display: flex;
     flex-direction: row;
@@ -20,21 +42,23 @@
 }
 
 .btn.custom-btn {
+    white-space: nowrap; 
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
     width: 20%;
+    box-shadow: 0px 4px 4px 0px #00000040;
 }
 
-.btn.orngebtn {
+.btn:hover {
     color: #5E1B89;
-    background: #FF9E78;
-    border: 0;
+    background-color: #FF9B74 !important;
+    box-shadow: 0px 8px 8px 0px #00000040;
 }
 
-.btn.vltbtn {
+.btn {
     color: #5E1B89;
-    background: #9D71BC;
+    background: #E2DAD6;
     border: 0;
 }
 

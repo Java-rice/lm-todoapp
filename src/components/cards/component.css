@@ -1,5 +1,11 @@
 .user-container{
     padding-top: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    margin-top: 1%;
+    margin-bottom: 5%;
 }
 
 .title{
@@ -10,86 +16,6 @@
     text-align: left;
     color: #5E1B89;
     white-space: nowrap;
-}
-
-//Quote Container
-.quote-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-}
-  
-.quote {
-    text-align: center;
-    padding-bottom: 80px;
-    padding-top: 50px;
-}
-
-.qt{
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 52.75px;
-    text-align: center;
-    color: #5E1B89;
-}
-
-/////////////////Navigation 
-
-.nav-tabs {
-    margin-bottom: 20px;
-    width: 100%;
-    display: flex; 
-    padding-left: 0; 
-    list-style: none; 
-}
-    
-.nav-item {
-    background: #FF7F4D;
-    border-radius: 5px;ww
-    width: 30%;
-    flex: 1;
-    list-style: none;
-}
-    
-.nav-link {
-    color: white !important;
-    border-radius: 5px;
-    display: block;
-    text-align: center;
-    line-height: 2.5rem;
-    padding: 10px auto;
-    height: 2.5rem;
-    width: 100%; 
-    flex: 1; 
-    text-decoration: none;
-}
-
-.nav-link.active {
-    background: linear-gradient(90.76deg, #5E1B89 0.58%, #F4512C 99.42%);
-    color: white !important;
-    border: none;
-}
-  
-.nav-link:hover {
-    color: white !important;
-    background: linear-gradient(90.76deg, #5E1B89 0.58%, #F4512C 99.42%);
-}
-  
-.navg{
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    padding: 0;
-}
-
-.user-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: start;
-    margin-top: 1%;
-    margin-bottom: 5%;
 }
 
 .profile-pic-container {
@@ -103,7 +29,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-   }
+}
     
 .profile-pic {
     width: 100%;
@@ -137,7 +63,7 @@
 
 .info-text{
     text-align: right;
-    width: 80%
+    width: 80%;
 }
 
 .info-message{
@@ -146,53 +72,51 @@
 }
 
 .card-btn {
-    background-color: #9D71BC !important;
+    background-color: #F5EDED !important;
     border: none !important;
     margin: auto;
     padding: 8px !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.25rem; 
+    border-radius: 0.25rem;
+    box-shadow: 0px 5px 4px 0px #00000040;
     cursor: pointer;
 }
 
+.card-btn:hover {
+    background-color: #FFE6C7 !important;
+    box-shadow: 0px 8px 8px 0px #00000040;
+}
+
+
 .card-btn img {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
 }
 
 .task-card.done {
     text-decoration: line-through;
     background-color: #e0e0e0;
 }
-  
-.card-btn {
-    background: none;
-    border: none;
-    index: 1;
-    padding: 0;
+
+.task-card {
+    background-color: white;
 }
-  
-.card-btn img {
-    width: 20px;
-    height: 20px;
-}
-  
-.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
-    background-color: #5E1B89;
-}
-  
-.my-4 {
-    margin: 1.5rem 0;
-}
-  
+
 .card-subtitle {
     margin-bottom: 0.5rem;
     color: rgba(0, 0, 0, 0.6);
 }
-  
+
 .card-text {
     margin-bottom: 1rem;
 }
-  
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #5E1B89;
+}
+
+.my-4 {
+    margin: 1.5rem 0;
+}

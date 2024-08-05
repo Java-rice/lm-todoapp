@@ -97,23 +97,26 @@ const Goals = () => {
 
   return (
     <div className="h-80">
+      <div className="title-bar container-fluid">
+        <h3 className="">Goals</h3>
+      </div>
       <div className="btn-container">
         <Button
-          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={handleShow}
         >
           <img className="img" src={add} alt="Add Goal" />
           Add Goal
         </Button>
         <Button
-          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={() => handleConfirm("markAllDone")}
         >
           <img className="img" src={done} alt="Mark All Done" />
           Mark All Done
         </Button>
         <Button
-          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={() => handleConfirm("clearAll")}
         >
           <img className="img" src={del} alt="Clear All" />
