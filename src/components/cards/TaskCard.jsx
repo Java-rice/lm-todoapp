@@ -41,6 +41,9 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
+  // Function to determine if the task is overdue
+  const isOverdue = new Date(task.deadline) < new Date() && !task.done;
+
   return (
     <>
       <Card className="my-4" style={{ backgroundColor: '#E2DAD6' }}>
@@ -49,8 +52,8 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
             <span className={`h5 font-weight-bold ${task.done ? 'text-decoration-line-through' : ''}`}>
               {task.title}
             </span>
-            <span className="badge bg-secondary">
-              {task.done ? "Done" : "Pending"}
+            <span className={`badge ${task.done ? 'bg-secondary' : isOverdue ? 'bg-danger' : 'bg-success'}`}>
+              {task.done ? "Done" : isOverdue ? "Overdue" : "Pending"}
             </span>
           </div>
           {task.goal && (

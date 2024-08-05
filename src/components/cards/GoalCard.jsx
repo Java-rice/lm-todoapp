@@ -27,7 +27,7 @@ const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
 
   return (
     <>
-      <Card className="my-4" style={{ backgroundColor: '#FFA07A' }}>
+      <Card className="my-4" style={{ backgroundColor: '#E2DAD6' }}>
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-2">
             <span
@@ -121,7 +121,7 @@ const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
           </Button>
           <Button variant="primary" onClick={handleEditGoal}>
             Save Changes
-          </Button>
+          </Button>s
         </Modal.Footer>
       </Modal>
     </>

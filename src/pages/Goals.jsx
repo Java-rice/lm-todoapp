@@ -19,6 +19,7 @@ const Goals = () => {
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
     const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
@@ -30,7 +31,7 @@ const Goals = () => {
 
   const handleSaveGoal = () => {
     const newGoal = {
-      id: goals.length + 1,
+      id: goals.length ? goals[goals.length - 1].id + 1 : 1,
       title: goalTitle,
       description: goalDescription,
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
@@ -47,7 +48,7 @@ const Goals = () => {
   };
 
   const handleMarkAsDone = (id) => {
-    const updatedGoals = goals.map((goal) => 
+    const updatedGoals = goals.map((goal) =>
       goal.id === id ? { ...goal, done: !goal.done } : goal
     );
     setGoals(updatedGoals);
@@ -66,6 +67,7 @@ const Goals = () => {
     );
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    setEditingGoal(null);
   };
 
   const handleMarkAllDone = () => {
@@ -132,17 +134,8 @@ const Goals = () => {
               goal={goal}
               markAsDone={handleMarkAsDone}
               deleteGoal={handleDeleteGoal}
-              editGoal={handleEditGoal}
-            />
-          ))}
-      </div>
-      <div>
-        {goals
-          .filter((goal) => goal.done)
-          .map((goal) => (
-            <AccomplishedCard
-              key={goal.id}
-              task={goal}
+              editGoal={(updatedGoal) => handleEditGoal(updatedGoal)}
+              onEdit={() => setEditingGoal(goal)}
             />
           ))}
       </div>

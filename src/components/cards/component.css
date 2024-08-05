@@ -30,6 +30,10 @@
     align-items: center;
     cursor: pointer;
 }
+
+.text-decoration-line-through {
+    text-decoration: line-through;
+}
     
 .profile-pic {
     width: 100%;
