@@ -10,12 +10,13 @@ html {
 }
 
 body {
-    background-image: url('./src/assets/background.png');
+    background-image: url('/src/assets/background.png');
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed; /* This makes the background image fixed */
+    background-attachment: fixed; 
     padding: 0 10%;
 }
+
 
 .header {
     width: 100%;
