@@ -10,15 +10,14 @@ const Accomplished = () => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
-    const accomplishedGoals = storedGoals.filter((goal) => goal.done);
-    setTasks(accomplishedGoals);
+    // Load accomplished tasks from a separate storage
+    const storedAccomplishedTasks = JSON.parse(localStorage.getItem("accomplishedTasks")) || [];
+    setTasks(storedAccomplishedTasks);
   }, []);
 
   const handleDeleteAll = () => {
-    const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
-    const updatedGoals = storedGoals.filter((goal) => !goal.done);
-    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    // Remove all tasks from the 'accomplishedTasks' storage
+    localStorage.removeItem("accomplishedTasks");
     setTasks([]);
   };
 
@@ -27,6 +26,13 @@ const Accomplished = () => {
   const handleConfirmProceed = () => {
     handleDeleteAll();
     handleClose();
+  };
+
+  const handleDeleteTask = (id) => {
+    const storedAccomplishedTasks = JSON.parse(localStorage.getItem("accomplishedTasks")) || [];
+    const updatedAccomplishedTasks = storedAccomplishedTasks.filter((task) => task.id !== id);
+    localStorage.setItem("accomplishedTasks", JSON.stringify(updatedAccomplishedTasks));
+    setTasks(updatedAccomplishedTasks);
   };
 
   return (
@@ -45,7 +51,7 @@ const Accomplished = () => {
       </div>
       <div>
         {tasks.map((task) => (
-          <AccomplishedCard key={task.id} task={task} />
+          <AccomplishedCard key={task.id} task={task} onDelete={handleDeleteTask} />
         ))}
       </div>
       {/* Confirmation Modal */}

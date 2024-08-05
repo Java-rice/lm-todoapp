@@ -6,64 +6,81 @@ import edit from '../../assets/cedit.png';
 import del from '../../assets/cdelete.png';
 import './component.css';
 
-const GoalCard = ({ goal, markAsDone, deleteGoal, editGoal }) => {
+const GoalCard = ({ goal, goals, setGoals }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTitle, setEditTitle] = useState(goal.title);
   const [editDescription, setEditDescription] = useState(goal.description);
   const [editDeadline, setEditDeadline] = useState(goal.deadline);
   const [editStatus, setEditStatus] = useState(goal.done);
 
+  const handleDeleteGoal = (id) => {
+    const updatedGoals = goals.filter(goal => goal.id !== id);
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
   const handleEditGoal = () => {
-    const updatedGoal = {
-      ...goal,
-      title: editTitle,
-      description: editDescription,
-      deadline: editDeadline,
-      done: editStatus
-    };
-    editGoal(updatedGoal);
+    const updatedGoals = goals.map(g => 
+      g.id === goal.id 
+      ? { ...g, title: editTitle, description: editDescription, deadline: editDeadline, done: editStatus }
+      : g
+    );
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
     setShowEditModal(false);
   };
 
+  const handleToggleDone = (id) => {
+    const updatedGoals = goals.map(g => 
+      g.id === id 
+      ? { ...g, done: !g.done }
+      : g
+    );
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+  };
+
+  // Function to determine if the goal is overdue
+  const isOverdue = new Date(goal.deadline) < new Date() && !goal.done;
+
   return (
     <>
-      <Card className="my-4" style={{ backgroundColor: '#FFA07A' }}>
+      <Card className="my-4 px-2 card__container" style={{ backgroundColor: '#E2DAD6' }}>
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <span
-              className={`h5 font-weight-bold ${goal.done ? 'text-decoration-line-through' : ''}`}
-            >
+          <div className="d-flex justify-content-between align-items-start mb-2">
+            <span className={`h5 font-weight-bold title__width ${goal.done ? 'text-decoration-line-through' : ''}`}>
               {goal.title}
             </span>
-            <span className={`badge ${goal.done ? 'bg-success' : 'bg-secondary'}`}>
-              {goal.done ? 'Done' : 'Pending'}
-            </span>
+            <div className="badge__container">
+              <span className={`badge ${goal.done ? 'bg-secondary': 'bg-info'}`}>
+                {goal.done ? "Done" : "Pending"}
+              </span>
+              <span className={`badge ${ isOverdue ? 'bg-danger' : 'bg-success'}`}>
+                {isOverdue ? "Overdue" : "Early"}
+              </span>
+            </div>
           </div>
           {goal.description && (
-            <h6
-              className={`card-text mb-2 ${goal.done ? 'text-decoration-line-through' : ''}`}
-            >
+            <p className={`card-text mb-2 ${goal.done ? 'text-decoration-line-through' : ''}`}>
               {goal.description}
-            </h6>
+            </p>
           )}
-          <div className="container-fluid d-flex flex-row justify-content-between">
-            <Card.Text>
-              <small className={`text-muted ${goal.done ? 'text-decoration-line-through' : ''}`}>
-                Created: {goal.createdAt}<br />
-                Deadline: {goal.deadline}
-              </small>
-            </Card.Text>
-            <div className="d-flex justify-content-end">
-            <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(task.id)}>
-                <img src={done} alt="Done" />
-              </Button>
-              <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
-                <img src={edit} alt="Edit" />
-              </Button>
-              <Button className="card-btn rounded me-2" onClick={() => handleDeleteTask(task.id)}>
-                <img src={del} alt="Delete" />
-              </Button>
-            </div>
+          <Card.Text>
+            <small className={`text-muted ${goal.done ? 'text-decoration-line-through' : ''}`}>
+              Created: {goal.createdAt}<br />
+              Deadline: {goal.deadline}
+            </small>
+          </Card.Text>
+          <div className="d-flex button-div justify-content-start">
+            <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(goal.id)}>
+              <img src={done} alt="Done" />
+            </Button>
+            <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
+              <img src={edit} alt="Edit" />
+            </Button>
+            <Button className="card-btn rounded me-2" onClick={() => handleDeleteGoal(goal.id)}>
+              <img src={del} alt="Delete" />
+            </Button>
           </div>
         </Card.Body>
       </Card>

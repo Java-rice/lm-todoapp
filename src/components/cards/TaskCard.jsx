@@ -41,17 +41,25 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
+  // Function to determine if the task is overdue
+  const isOverdue = new Date(task.deadline) < new Date() && !task.done;
+
   return (
     <>
-      <Card className="my-4" style={{ backgroundColor: '#E2DAD6' }}>
+      <Card className="my-4 px-2 card__container" style={{ backgroundColor: '#E2DAD6' }}>
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <span className={`h5 font-weight-bold ${task.done ? 'text-decoration-line-through' : ''}`}>
+          <div className="d-flex justify-content-between align-items-start mb-2">
+            <span className={`h5 font-weight-bold title__width ${task.done ? 'text-decoration-line-through' : ''}`}>
               {task.title}
             </span>
-            <span className="badge bg-secondary">
-              {task.done ? "Done" : "Pending"}
-            </span>
+            <div className="badge__container">
+              <span className={`badge ${task.done ? 'bg-secondary': 'bg-info'}`}>
+                {task.done ? "Done" : "Pending"}
+              </span>
+              <span className={`badge ${ isOverdue ? 'bg-danger' : 'bg-success'}`}>
+                {isOverdue ? "Overdue" : "Early"}
+              </span>
+            </div>
           </div>
           {task.goal && (
             <h6 className={`card-subtitle mb-2 text-muted ${task.done ? 'text-decoration-line-through' : ''}`}>
@@ -59,28 +67,26 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
             </h6>
           )}
           {task.description && (
-            <h6 className={`card-text mb-2 ${task.done ? 'text-decoration-line-through' : ''}`}>
+            <p className={`card-text mb-2 ${task.done ? 'text-decoration-line-through' : ''}`}>
               {task.description}
-            </h6>
+            </p>
           )}
-          <div className='container-fluid d-flex flex-row justify-content-between'>
-            <Card.Text>
-              <small className={`text-muted ${task.done ? 'text-decoration-line-through' : ''}`}>
-                Created: {task.createdAt}<br />
-                Deadline: {task.deadline}
-              </small>
-            </Card.Text>
-            <div className="d-flex justify-content-end">
-              <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(task.id)}>
-                <img src={done} alt="Done" />
-              </Button>
-              <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
-                <img src={edit} alt="Edit" />
-              </Button>
-              <Button className="card-btn rounded me-2" onClick={() => handleDeleteTask(task.id)}>
-                <img src={del} alt="Delete" />
-              </Button>
-            </div>
+          <Card.Text>
+            <small className={`text-muted ${task.done ? 'text-decoration-line-through' : ''}`}>
+              Created: {task.createdAt}<br />
+              Deadline: {task.deadline}
+            </small>
+          </Card.Text>
+          <div className="d-flex button-div justify-content-start">
+            <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(task.id)}>
+              <img src={done} alt="Done" />
+            </Button>
+            <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
+              <img src={edit} alt="Edit" />
+            </Button>
+            <Button className="card-btn rounded me-2" onClick={() => handleDeleteTask(task.id)}>
+              <img src={del} alt="Delete" />
+            </Button>
           </div>
         </Card.Body>
       </Card>
