@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <Router className="container-fluid router__cont">
       <Header />
       {!isMobile && <User />}
       <div className={`content ${isMobile ? 'content-mobile' : ''}`}>
