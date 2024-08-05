@@ -31,9 +31,12 @@ const Accomplished = () => {
 
   return (
     <div className="h-80">
+      <div className="title-bar container-fluid">
+        <h3 className="">Accomplished Tasks</h3>
+      </div>
       <div className="btn-container">
         <Button
-          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={handleConfirm}
         >
           <img className="img" src={done} alt="Delete All" />

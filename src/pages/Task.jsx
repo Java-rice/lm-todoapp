@@ -16,6 +16,7 @@ const Task = () => {
   const [taskDescription, setTaskDescription] = useState("");
   const [taskDeadline, setTaskDeadline] = useState(new Date());
   const [goal, setGoal] = useState("");
+  const [taskStatus, setTaskStatus] = useState("Pending");
   const [tasks, setTasks] = useState([]);
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -39,6 +40,7 @@ const Task = () => {
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(taskDeadline, "M/d/yyyy h:mm a"),
       goal: goal,
+      status: taskStatus,
       done: false,
     };
     const updatedTasks = [...tasks, newTask];
@@ -48,11 +50,12 @@ const Task = () => {
     setTaskDescription("");
     setTaskDeadline(new Date());
     setGoal("");
+    setTaskStatus("Pending");
     handleClose();
   };
 
   const handleMarkAllDone = () => {
-    const updatedTasks = tasks.map((task) => ({ ...task, done: true }));
+    const updatedTasks = tasks.map((task) => ({ ...task, done: true, status: "Done" }));
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
@@ -80,27 +83,29 @@ const Task = () => {
 
   return (
     <div className="h-80">
-      <div><h1>TO DO</h1></div>
+      <div className="title-bar container-fluid">
+        <h3 className="">To Do</h3>
+      </div>
       <div className="btn-container">
         <Button
-          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={handleShow}
         >
           <img className="img" src={add} alt="Add Task" />
           Add Task
         </Button>
         <Button
-          className="btn custom-btn orngebtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={() => handleConfirm("markAllDone")}
         >
-          <img className="img" src={del} alt="Mark All Done" />
+          <img className="img" src={done} alt="Mark All Done" />
           Mark All Done
         </Button>
         <Button
-          className="btn custom-btn vltbtn btn-sm rounded-pill"
+          className="btn custom-btn btn-sm rounded"
           onClick={() => handleConfirm("clearAll")}
         >
-          <img className="img" src={done} alt="Clear All" />
+          <img className="img" src={del} alt="Clear All" />
           Clear All
         </Button>
       </div>
@@ -116,12 +121,7 @@ const Task = () => {
         ))}
       </div>
       {/* Add Task Modal */}
-      <Modal
-        show={showModal}
-        onHide={handleClose}
-        centered
-        className="custom-modal"
-      >
+      <Modal show={showModal} onHide={handleClose} centered className="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Add New Task</Modal.Title>
         </Modal.Header>
@@ -169,6 +169,17 @@ const Task = () => {
                     {g.title}
                   </option>
                 ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="taskStatus" className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Control
+                as="select"
+                value={taskStatus}
+                onChange={(e) => setTaskStatus(e.target.value)}
+              >
+                <option value="Pending">Pending</option>
+                <option value="Done">Done</option>
               </Form.Control>
             </Form.Group>
           </Form>
