@@ -4,6 +4,7 @@
   top: 0;
   left: 0;
   z-index: 100;
+  color: #F8FFFE !important;
   background-color: #333333;
   box-shadow: 0px 4px 4px 0px #00000040;
   display: flex;
@@ -117,16 +118,24 @@
 
 .nav__toggle {
   font-size: 1.5rem;
-  color: #F8FFFE;
+  color: #F8FFFE !important;
   cursor: pointer;
   z-index: 1000;
 }
 
 .nav__github {
   font-size: 1.5rem;
-  color: #F8FFFE;
+  color: #F8FFFE !important;
   margin-left: 1rem;
   transition: color 0.3s ease;
+}
+
+.nav__github svg {
+  color: #F8FFFE !important;
+}
+
+.nav__toggle svg {
+  color: #F8FFFE !important;
 }
 
 .user-mobile {
@@ -144,6 +153,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  color: #F8FFFE !important;
 }
 
 @media (max-width: 768px) {

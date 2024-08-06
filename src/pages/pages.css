@@ -5,6 +5,7 @@
     height: auto;
     background: #F8FFFE;
     box-shadow: 0px 5px 5px 0px #00000040;
+    color: #333333;
 }
 
 .title-bar{
@@ -28,6 +29,12 @@
     font-family: Lato, serif;
 }
 
+.modal__button{
+    background-color: #E2DAD6;
+    color: #5E1B89;
+    box-shadow: 0px 5px 4px 0px #00000040;
+    font-weight: bold;
+}
 
 .btn-container {
     display: flex;

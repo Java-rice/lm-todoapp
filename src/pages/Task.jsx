@@ -204,11 +204,7 @@ const Task = () => {
             variant="outline-light"
             size="sm"
             onClick={handleClose}
-            style={{
-              borderColor: "#5E1B89",
-              color: "#5E1B89",
-              marginRight: "10px",
-            }}
+            className='modal__button'
           >
             Close
           </Button>
@@ -237,16 +233,16 @@ const Task = () => {
           ?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={handleConfirmClose}>
+          <Button variant="secondary" className='modal__button' onClick={handleConfirmClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleConfirmProceed}>
+          <Button variant="primary" className='modal__button' onClick={handleConfirmProceed}>
             Proceed
           </Button>
         </Modal.Footer>
       </Modal>
       {/* Validation Modal */}
-      <Modal show={showValidationModal} onHide={handleValidationClose} centered>
+      <Modal show={showValidationModal} onHide={handleValidationClose} centered className="modal-sm">
         <Modal.Header closeButton>
           <Modal.Title>Validation Error</Modal.Title>
         </Modal.Header>
@@ -254,7 +250,7 @@ const Task = () => {
           <p>{validationMessage}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleValidationClose}>
+          <Button variant="primary" className='modal__button' onClick={handleValidationClose}>
             OK
           </Button>
         </Modal.Footer>

@@ -69,10 +69,10 @@ const Header = () => {
       </nav>
       <div className="icon-container">
         <a href="https://github.com/Java-rice/lm-todoapp.git" className="nav__github" target="_blank" rel="noopener noreferrer">
-          <FaGithub />
+          <FaGithub color="#F8FFFE" />
         </a>
         <div className="nav__toggle" onClick={handleMenuToggle}>
-          {isMenuOpen ? <IoClose /> : <IoMenu />}
+          {isMenuOpen ? <IoClose style={{ color: '#F8FFFE' }} /> : <IoMenu style={{ color: '#F8FFFE' }} />}
         </div>
       </div>
     </header>
