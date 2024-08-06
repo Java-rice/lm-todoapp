@@ -15,6 +15,7 @@ const Goals = () => {
   const [goalTitle, setGoalTitle] = useState("");
   const [goalDescription, setGoalDescription] = useState("");
   const [goalDeadline, setGoalDeadline] = useState(new Date());
+  const [goalStatus, setGoalStatus] = useState("Pending");
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
@@ -34,6 +35,7 @@ const Goals = () => {
       description: goalDescription,
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(goalDeadline, "M/d/yyyy h:mm a"),
+      status: goalStatus,
       done: false,
       origin: "goals",
     };
@@ -43,6 +45,7 @@ const Goals = () => {
     setGoalTitle("");
     setGoalDescription("");
     setGoalDeadline(new Date());
+    setGoalStatus("Pending");
     handleClose();
   };
 
@@ -128,19 +131,18 @@ const Goals = () => {
           <GoalCard
             key={goal.id}
             goal={goal}
-            markAsDone={handleMarkAsDone}
-            deleteGoal={handleDeleteGoal}
-            editGoal={handleEditGoal}
+            goals={goals}
+            setGoals={setGoals}
           />
         ))}
       </div>
 
       {/* Modal for Adding Goal */}
-      <Modal show={showModal} onHide={handleClose} centered>
+      <Modal show={showModal} onHide={handleClose} centered className="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Add Goal</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ backgroundColor: "#F8FFFE" }}>
           <Form>
             <Form.Group controlId="goalTitle" className="mb-3">
               <Form.Label>Title</Form.Label>
@@ -171,6 +173,17 @@ const Goals = () => {
                 className="form-control"
               />
             </Form.Group>
+            <Form.Group controlId="goalStatus" className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Control
+                as="select"
+                value={goalStatus}
+                onChange={(e) => setGoalStatus(e.target.value)}
+              >
+                <option value="Pending">Pending</option>
+                <option value="Done">Done</option>
+              </Form.Control>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -196,7 +209,7 @@ const Goals = () => {
             <p>Are you sure you want to clear all goals?</p>
           )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
           <Button variant="secondary" onClick={handleConfirmClose}>
             No
           </Button>
