@@ -36,7 +36,7 @@ const Goals = () => {
       createdAt: format(new Date(), "M/d/yyyy h:mm a"),
       deadline: format(goalDeadline, "M/d/yyyy h:mm a"),
       status: goalStatus,
-      done: false,
+      done: goalStatus === "Done",
       origin: "goals",
     };
     const updatedGoals = [...goals, newGoal];
@@ -133,6 +133,9 @@ const Goals = () => {
             goal={goal}
             goals={goals}
             setGoals={setGoals}
+            handleMarkAsDone={handleMarkAsDone}
+            handleDeleteGoal={handleDeleteGoal}
+            handleEditGoal={handleEditGoal}
           />
         ))}
       </div>

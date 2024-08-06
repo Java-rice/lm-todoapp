@@ -27,6 +27,11 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
   const [editDeadline, setEditDeadline] = useState(task.deadline);
   const [editGoal, setEditGoal] = useState(task.goal);
   const [editStatus, setEditStatus] = useState(task.done);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showUndoneConfirm, setShowUndoneConfirm] = useState(false);
+  const [showDoneConfirm, setShowDoneConfirm] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [taskToToggle, setTaskToToggle] = useState(null);
 
   // Check if the goal associated with this task is done
   const goalIsDone = goals.find(g => g.title === task.goal)?.done;
@@ -35,6 +40,7 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
     const updatedTasks = tasks.filter(task => task.id !== id);
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setShowDeleteConfirm(false);
   };
 
   const handleEditTask = () => {
@@ -49,13 +55,24 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
   };
 
   const handleToggleDone = (id) => {
+    setTaskToToggle(id);
+    if (tasks.find(t => t.id === id).done) {
+      setShowUndoneConfirm(true);
+    } else {
+      setShowDoneConfirm(true);
+    }
+  };
+
+  const handleConfirmToggle = () => {
     const updatedTasks = tasks.map(t => 
-      t.id === id 
+      t.id === taskToToggle 
       ? { ...t, done: !t.done }
       : t
     );
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setShowDoneConfirm(false);
+    setShowUndoneConfirm(false);
   };
 
   // Function to determine if the task is overdue
@@ -85,7 +102,7 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
           )}
           {task.description && (
             <p className={`card-text mb-2 ${task.done ? 'text-decoration-line-through' : ''}`}>
-              {task.description}
+              <i>{task.description}</i>
             </p>
           )}
           <Card.Text>
@@ -101,7 +118,7 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
             <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
               <img src={edit} alt="Edit" />
             </Button>
-            <Button className="card-btn rounded me-2" onClick={() => handleDeleteTask(task.id)}>
+            <Button className="card-btn rounded me-2" onClick={() => { setTaskToDelete(task.id); setShowDeleteConfirm(true); }}>
               <img src={del} alt="Delete" />
             </Button>
           </div>
@@ -176,6 +193,60 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
           </Button>
           <Button variant="primary" onClick={handleEditTask}>
             Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this task?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={() => handleDeleteTask(taskToDelete)}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Done Confirmation Modal */}
+      <Modal show={showDoneConfirm} onHide={() => setShowDoneConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Status Change</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to mark this task as done?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowDoneConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleConfirmToggle}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Undone Confirmation Modal */}
+      <Modal show={showUndoneConfirm} onHide={() => setShowUndoneConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Status Change</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to mark this task as undone?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowUndoneConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleConfirmToggle}>
+            Yes
           </Button>
         </Modal.Footer>
       </Modal>

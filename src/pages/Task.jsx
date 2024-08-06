@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import "./pages.css";
 
+
 const Task = () => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
@@ -41,7 +42,7 @@ const Task = () => {
       deadline: format(taskDeadline, "M/d/yyyy h:mm a"),
       goal: goal,
       status: taskStatus,
-      done: false,
+      done: taskStatus === "Done",
       origin: "tasks",
     };
     const updatedTasks = [...tasks, newTask];
@@ -220,7 +221,7 @@ const Task = () => {
         <Modal.Body>
           Are you sure you want to {confirmAction === "markAllDone" ? "mark all tasks as done" : "clear all tasks"}?
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
           <Button variant="secondary" onClick={handleConfirmClose}>
             Cancel
           </Button>
