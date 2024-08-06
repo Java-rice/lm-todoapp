@@ -199,8 +199,8 @@ const Goals = () => {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+        <Modal.Footer >
+          <Button variant="secondary" className='modal__button' onClick={handleClose}>
             Close
           </Button>
           <Button variant="primary" onClick={handleSaveGoal}>
@@ -214,7 +214,7 @@ const Goals = () => {
         <Modal.Header closeButton>
           <Modal.Title>Confirm Action</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ color: "#FF7F4D" }}>
+        <Modal.Body>
           {confirmAction === "markAllDone" && (
             <p>Are you sure you want to mark all goals as done?</p>
           )}
@@ -223,10 +223,10 @@ const Goals = () => {
           )}
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={handleConfirmClose}>
+          <Button variant="secondary" className='modal__button' onClick={handleConfirmClose}>
             No
           </Button>
-          <Button variant="primary" onClick={handleConfirmProceed}>
+          <Button variant="primary" className='modal__button' onClick={handleConfirmProceed}>
             Yes
           </Button>
         </Modal.Footer>
@@ -234,14 +234,14 @@ const Goals = () => {
 
       {/* Validation Modal */}
       <Modal show={showValidationModal} onHide={handleValidationClose} centered className="modal-sm">
-        <Modal.Header closeButton style={{ backgroundColor: "#9D71BC" }}>
+        <Modal.Header closeButton>
           <Modal.Title>Validation Error</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{validationMessage}</p>
         </Modal.Body>
-        <Modal.Footer style={{ backgroundColor: "#9D71BC" }}>
-          <Button variant="primary" onClick={handleValidationClose}>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="primary" onClick={handleValidationClose} className='modal__button'>
             OK
           </Button>
         </Modal.Footer>

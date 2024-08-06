@@ -152,7 +152,7 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
               />
             </Form.Group>
             <Form.Group controlId="editDeadline" className="mb-3">
-              <Form.Label>Deadline</Form.Label>
+              <Form.Label>Deadline<tab></tab></Form.Label>
               <Form.Control
                 type="datetime-local"
                 value={editDeadline}
@@ -187,11 +187,11 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowEditModal(false)}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleEditTask}>
+          <Button variant="primary" className='modal__button' onClick={handleEditTask}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -206,10 +206,10 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
           Are you sure you want to delete this task?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)}>
+          <Button variant="secondary"  className='modal__button' onClick={() => setShowDeleteConfirm(false)}>
             No
           </Button>
-          <Button variant="primary" onClick={() => handleDeleteTask(taskToDelete)}>
+          <Button variant="primary" className='modal__button' onClick={() => handleDeleteTask(taskToDelete)}>
             Yes
           </Button>
         </Modal.Footer>
@@ -224,10 +224,10 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
           Are you sure you want to mark this task as done?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowDoneConfirm(false)}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowDoneConfirm(false)}>
             No
           </Button>
-          <Button variant="primary" onClick={handleConfirmToggle}>
+          <Button variant="primary" className='modal__button' onClick={handleConfirmToggle}>
             Yes
           </Button>
         </Modal.Footer>

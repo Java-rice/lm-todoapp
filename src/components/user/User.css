@@ -55,10 +55,12 @@
 .info-message {
     margin-bottom: 0;
     text-align: center;
+    color: #333333;
 }
 
 .info-text{
     text-align: center;
+    color: #333333;
 }
 
 .name-input-container {

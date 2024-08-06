@@ -171,10 +171,10 @@ const GoalCard = ({ goal, goals, setGoals }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowEditModal(false)}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleEditGoal}>
+          <Button variant="primary" className='modal__button' onClick={handleEditGoal}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -189,10 +189,10 @@ const GoalCard = ({ goal, goals, setGoals }) => {
           Are you sure you want to delete this goal?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowDeleteConfirm(false)}>
             No
           </Button>
-          <Button variant="primary" onClick={handleDeleteGoal}>
+          <Button variant="primary" className='modal__button' onClick={handleDeleteGoal}>
             Yes
           </Button>
         </Modal.Footer>
@@ -207,10 +207,10 @@ const GoalCard = ({ goal, goals, setGoals }) => {
           Are you sure you want to mark this goal as done?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowDoneConfirm(false)}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowDoneConfirm(false)}>
             No
           </Button>
-          <Button variant="primary" onClick={handleConfirmDone}>
+          <Button variant="primary" className='modal__button' onClick={handleConfirmDone}>
             Yes
           </Button>
         </Modal.Footer>
@@ -225,10 +225,10 @@ const GoalCard = ({ goal, goals, setGoals }) => {
           Are you sure you want to mark this goal as not done?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
-          <Button variant="secondary" onClick={() => setShowUndoneConfirm(false)}>
+          <Button variant="secondary" className='modal__button' onClick={() => setShowUndoneConfirm(false)}>
             No
           </Button>
-          <Button variant="primary" onClick={handleConfirmUndone}>
+          <Button variant="primary" className='modal__button' onClick={handleConfirmUndone}>
             Yes
           </Button>
         </Modal.Footer>
