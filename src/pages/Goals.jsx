@@ -19,6 +19,8 @@ const Goals = () => {
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
 
   useEffect(() => {
     const storedGoals = JSON.parse(localStorage.getItem("goals")) || [];
@@ -29,6 +31,12 @@ const Goals = () => {
   const handleClose = () => setShowModal(false);
 
   const handleSaveGoal = () => {
+    if (!goalTitle.trim() || !goalDescription.trim()) {
+      setValidationMessage("Title and Description cannot be blank.");
+      setShowValidationModal(true);
+      return;
+    }
+
     const newGoal = {
       id: goals.length + 1,
       title: goalTitle,
@@ -97,6 +105,8 @@ const Goals = () => {
     if (confirmAction === "clearAll") handleClearAll();
     handleConfirmClose();
   };
+
+  const handleValidationClose = () => setShowValidationModal(false);
 
   return (
     <div className="h-80">
@@ -204,7 +214,7 @@ const Goals = () => {
         <Modal.Header closeButton>
           <Modal.Title>Confirm Action</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ color: "#FF7F4D" }}>
           {confirmAction === "markAllDone" && (
             <p>Are you sure you want to mark all goals as done?</p>
           )}
@@ -218,6 +228,21 @@ const Goals = () => {
           </Button>
           <Button variant="primary" onClick={handleConfirmProceed}>
             Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Validation Modal */}
+      <Modal show={showValidationModal} onHide={handleValidationClose} centered className="modal-sm">
+        <Modal.Header closeButton style={{ backgroundColor: "#9D71BC" }}>
+          <Modal.Title>Validation Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{validationMessage}</p>
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#9D71BC" }}>
+          <Button variant="primary" onClick={handleValidationClose}>
+            OK
           </Button>
         </Modal.Footer>
       </Modal>
