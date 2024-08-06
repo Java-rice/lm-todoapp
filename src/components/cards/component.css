@@ -147,3 +147,12 @@
     min-width: 120px;
     width: 20%;
 }
+
+.accomplished-button-div{
+    min-width: 80px;
+    width: 10%;
+}
+
+.text-decoration-line-through {
+    text-decoration: line-through;
+}

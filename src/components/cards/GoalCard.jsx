@@ -6,8 +6,25 @@ import edit from '../../assets/cedit.png';
 import del from '../../assets/cdelete.png';
 import './component.css';
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
 const GoalCard = ({ goal, goals, setGoals }) => {
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showUndoneConfirm, setShowUndoneConfirm] = useState(false);
+  const [showDoneConfirm, setShowDoneConfirm] = useState(false);
   const [editTitle, setEditTitle] = useState(goal.title);
   const [editDescription, setEditDescription] = useState(goal.description);
   const [editDeadline, setEditDeadline] = useState(goal.deadline);
@@ -17,6 +34,7 @@ const GoalCard = ({ goal, goals, setGoals }) => {
     const updatedGoals = goals.filter(g => g.id !== goal.id);
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    setShowDeleteConfirm(false);
   };
 
   const handleEditGoal = () => {
@@ -31,6 +49,14 @@ const GoalCard = ({ goal, goals, setGoals }) => {
   };
 
   const handleToggleDone = () => {
+    if (goal.done) {
+      setShowUndoneConfirm(true);
+    } else {
+      setShowDoneConfirm(true);
+    }
+  };
+
+  const handleConfirmUndone = () => {
     const updatedGoals = goals.map(g => 
       g.id === goal.id 
       ? { ...g, done: !g.done }
@@ -38,6 +64,18 @@ const GoalCard = ({ goal, goals, setGoals }) => {
     );
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    setShowUndoneConfirm(false);
+  };
+
+  const handleConfirmDone = () => {
+    const updatedGoals = goals.map(g => 
+      g.id === goal.id 
+      ? { ...g, done: !g.done }
+      : g
+    );
+    setGoals(updatedGoals);
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    setShowDoneConfirm(false);
   };
 
   // Function to determine if the goal is overdue
@@ -62,13 +100,13 @@ const GoalCard = ({ goal, goals, setGoals }) => {
           </div>
           {goal.description && (
             <p className={`card-text mb-2 ${goal.done ? 'text-decoration-line-through' : ''}`}>
-              {goal.description}
+              <i>{goal.description}</i>
             </p>
           )}
           <Card.Text>
             <small className={`text-muted ${goal.done ? 'text-decoration-line-through' : ''}`}>
-              Created: {goal.createdAt}<br />
-              Deadline: {goal.deadline}
+              Created: {formatDate(goal.createdAt)}<br />
+              Deadline: {formatDate(goal.deadline)}
             </small>
           </Card.Text>
           <div className="d-flex button-div justify-content-start">
@@ -78,7 +116,7 @@ const GoalCard = ({ goal, goals, setGoals }) => {
             <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
               <img src={edit} alt="Edit" />
             </Button>
-            <Button className="card-btn rounded me-2" onClick={handleDeleteGoal}>
+            <Button className="card-btn rounded me-2" onClick={() => setShowDeleteConfirm(true)}>
               <img src={del} alt="Delete" />
             </Button>
           </div>
@@ -132,12 +170,66 @@ const GoalCard = ({ goal, goals, setGoals }) => {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>
             Close
           </Button>
           <Button variant="primary" onClick={handleEditGoal}>
             Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this goal?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleDeleteGoal}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Done Confirmation Modal */}
+      <Modal show={showDoneConfirm} onHide={() => setShowDoneConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Status Change</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to mark this goal as done?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowDoneConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleConfirmDone}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Undone Confirmation Modal */}
+      <Modal show={showUndoneConfirm} onHide={() => setShowUndoneConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Status Change</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to mark this goal as not done?
+        </Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
+          <Button variant="secondary" onClick={() => setShowUndoneConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleConfirmUndone}>
+            Yes
           </Button>
         </Modal.Footer>
       </Modal>
