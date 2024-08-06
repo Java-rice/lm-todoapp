@@ -5,19 +5,40 @@ import done from "../assets/done.png";
 import AccomplishedCard from "../components/cards/AccomplishedCard";
 import "./pages.css";
 
+// Define constant for local storage key
+const ACCOMPLISHED_TASKS_KEY = "accomplishedTasks";
+
+// Custom hook for local storage operations
+const useLocalStorage = (key, initialValue) => {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error("Error reading localStorage key", key, error);
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      console.error("Error setting localStorage key", key, error);
+    }
+  };
+
+  return [storedValue, setValue];
+};
+
 const Accomplished = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useLocalStorage(ACCOMPLISHED_TASKS_KEY, []);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  useEffect(() => {
-    // Load accomplished tasks from a separate storage
-    const storedAccomplishedTasks = JSON.parse(localStorage.getItem("accomplishedTasks")) || [];
-    setTasks(storedAccomplishedTasks);
-  }, []);
-
   const handleDeleteAll = () => {
-    // Remove all tasks from the 'accomplishedTasks' storage
-    localStorage.removeItem("accomplishedTasks");
+    localStorage.removeItem(ACCOMPLISHED_TASKS_KEY);
     setTasks([]);
   };
 
@@ -29,9 +50,7 @@ const Accomplished = () => {
   };
 
   const handleDeleteTask = (id) => {
-    const storedAccomplishedTasks = JSON.parse(localStorage.getItem("accomplishedTasks")) || [];
-    const updatedAccomplishedTasks = storedAccomplishedTasks.filter((task) => task.id !== id);
-    localStorage.setItem("accomplishedTasks", JSON.stringify(updatedAccomplishedTasks));
+    const updatedAccomplishedTasks = tasks.filter((task) => task.id !== id);
     setTasks(updatedAccomplishedTasks);
   };
 
@@ -41,10 +60,7 @@ const Accomplished = () => {
         <h3 className="">Accomplished Tasks</h3>
       </div>
       <div className="btn-container">
-        <Button
-          className="btn custom-btn btn-sm rounded"
-          onClick={handleConfirm}
-        >
+        <Button className="btn custom-btn btn-sm rounded" onClick={handleConfirm}>
           <img className="img" src={done} alt="Delete All" />
           Delete All
         </Button>

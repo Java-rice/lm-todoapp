@@ -6,6 +6,20 @@ import edit from '../../assets/cedit.png';
 import del from '../../assets/cdelete.png';
 import './component.css';
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
 const TaskCard = ({ task, tasks, setTasks, goals }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
@@ -13,6 +27,9 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
   const [editDeadline, setEditDeadline] = useState(task.deadline);
   const [editGoal, setEditGoal] = useState(task.goal);
   const [editStatus, setEditStatus] = useState(task.done);
+
+  // Check if the goal associated with this task is done
+  const goalIsDone = goals.find(g => g.title === task.goal)?.done;
 
   const handleDeleteTask = (id) => {
     const updatedTasks = tasks.filter(task => task.id !== id);
@@ -56,13 +73,13 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
               <span className={`badge ${task.done ? 'bg-secondary': 'bg-info'}`}>
                 {task.done ? "Done" : "Pending"}
               </span>
-              <span className={`badge ${ isOverdue ? 'bg-danger' : 'bg-success'}`}>
+              <span className={`badge ${isOverdue ? 'bg-danger' : 'bg-success'}`}>
                 {isOverdue ? "Overdue" : "Early"}
               </span>
             </div>
           </div>
           {task.goal && (
-            <h6 className={`card-subtitle mb-2 text-muted ${task.done ? 'text-decoration-line-through' : ''}`}>
+            <h6 className={`card-subtitle mb-2 text-muted ${goalIsDone ? 'text-decoration-line-through' : ''}`}>
               Goal: {task.goal}
             </h6>
           )}
@@ -73,8 +90,8 @@ const TaskCard = ({ task, tasks, setTasks, goals }) => {
           )}
           <Card.Text>
             <small className={`text-muted ${task.done ? 'text-decoration-line-through' : ''}`}>
-              Created: {task.createdAt}<br />
-              Deadline: {task.deadline}
+              Created: {formatDate(task.createdAt)}<br />
+              Deadline: {formatDate(task.deadline)}
             </small>
           </Card.Text>
           <div className="d-flex button-div justify-content-start">

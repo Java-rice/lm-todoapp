@@ -13,8 +13,8 @@ const GoalCard = ({ goal, goals, setGoals }) => {
   const [editDeadline, setEditDeadline] = useState(goal.deadline);
   const [editStatus, setEditStatus] = useState(goal.done);
 
-  const handleDeleteGoal = (id) => {
-    const updatedGoals = goals.filter(goal => goal.id !== id);
+  const handleDeleteGoal = () => {
+    const updatedGoals = goals.filter(g => g.id !== goal.id);
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
   };
@@ -30,9 +30,9 @@ const GoalCard = ({ goal, goals, setGoals }) => {
     setShowEditModal(false);
   };
 
-  const handleToggleDone = (id) => {
+  const handleToggleDone = () => {
     const updatedGoals = goals.map(g => 
-      g.id === id 
+      g.id === goal.id 
       ? { ...g, done: !g.done }
       : g
     );
@@ -52,10 +52,10 @@ const GoalCard = ({ goal, goals, setGoals }) => {
               {goal.title}
             </span>
             <div className="badge__container">
-              <span className={`badge ${goal.done ? 'bg-secondary': 'bg-info'}`}>
+              <span className={`badge ${goal.done ? 'bg-secondary' : 'bg-info'}`}>
                 {goal.done ? "Done" : "Pending"}
               </span>
-              <span className={`badge ${ isOverdue ? 'bg-danger' : 'bg-success'}`}>
+              <span className={`badge ${isOverdue ? 'bg-danger' : 'bg-success'}`}>
                 {isOverdue ? "Overdue" : "Early"}
               </span>
             </div>
@@ -72,13 +72,13 @@ const GoalCard = ({ goal, goals, setGoals }) => {
             </small>
           </Card.Text>
           <div className="d-flex button-div justify-content-start">
-            <Button className="card-btn rounded me-2" onClick={() => handleToggleDone(goal.id)}>
+            <Button className="card-btn rounded me-2" onClick={handleToggleDone}>
               <img src={done} alt="Done" />
             </Button>
             <Button className="card-btn rounded me-2" onClick={() => setShowEditModal(true)}>
               <img src={edit} alt="Edit" />
             </Button>
-            <Button className="card-btn rounded me-2" onClick={() => handleDeleteGoal(goal.id)}>
+            <Button className="card-btn rounded me-2" onClick={handleDeleteGoal}>
               <img src={del} alt="Delete" />
             </Button>
           </div>
