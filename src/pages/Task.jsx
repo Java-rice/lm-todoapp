@@ -10,7 +10,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import "./pages.css";
 
-
 const Task = () => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
@@ -22,6 +21,8 @@ const Task = () => {
   const [goals, setGoals] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -34,6 +35,12 @@ const Task = () => {
   const handleClose = () => setShowModal(false);
 
   const handleSaveTask = () => {
+    if (!taskTitle.trim() || !taskDescription.trim()) {
+      setValidationMessage("Title and Description cannot be blank.");
+      setShowValidationModal(true);
+      return;
+    }
+
     const newTask = {
       id: tasks.length + 1,
       title: taskTitle,
@@ -57,7 +64,11 @@ const Task = () => {
   };
 
   const handleMarkAllDone = () => {
-    const updatedTasks = tasks.map((task) => ({ ...task, done: true, status: "Done" }));
+    const updatedTasks = tasks.map((task) => ({
+      ...task,
+      done: true,
+      status: "Done",
+    }));
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
@@ -82,6 +93,8 @@ const Task = () => {
     if (confirmAction === "clearAll") handleClearAll();
     handleConfirmClose();
   };
+
+  const handleValidationClose = () => setShowValidationModal(false);
 
   return (
     <div className="h-80 card__bar">
@@ -219,7 +232,9 @@ const Task = () => {
           <Modal.Title>Confirm Action</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to {confirmAction === "markAllDone" ? "mark all tasks as done" : "clear all tasks"}?
+          Are you sure you want to{" "}
+          {confirmAction === "markAllDone" ? "mark all tasks as done" : "clear all tasks"}
+          ?
         </Modal.Body>
         <Modal.Footer style={{ backgroundColor: "#FF7F4D" }}>
           <Button variant="secondary" onClick={handleConfirmClose}>
@@ -227,6 +242,20 @@ const Task = () => {
           </Button>
           <Button variant="primary" onClick={handleConfirmProceed}>
             Proceed
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Validation Modal */}
+      <Modal show={showValidationModal} onHide={handleValidationClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Validation Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{validationMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleValidationClose}>
+            OK
           </Button>
         </Modal.Footer>
       </Modal>
