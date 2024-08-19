@@ -18,20 +18,10 @@ A simple To Do application built with React. This app allows users to manage the
 - date-fns: For date formatting.
 
 ### Installation
-#### Clone the repository:
-```
-git clone <repository-url>
-cd <repository-directory>
-```
-#### Install the dependencies:
 ```
 npm install react-router-dom react-bootstrap bootstrap react-bootstrap-icons react-datepicker date-fns
 ```
-#### Start the development server:
-```
-npm start
-Open your browser and navigate to http://localhost:3000 to view the application.
-```
+
 ### Usage
 - Add a New Task
 - Click on the "Add Task" button.
@@ -43,6 +33,3 @@ Open your browser and navigate to http://localhost:3000 to view the application.
 - Click the "Delete" button on a task to remove it from the list.
 - Clear All Tasks
 - Click the "Clear All" button to remove all tasks from the list.
-
-### Contributing
-- Feel free to fork the repository and submit pull requests with improvements or new features.
